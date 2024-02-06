@@ -1,0 +1,655 @@
+CREATE TABLE [dbo].[rent](
+	[rent_id] [int] IDENTITY(1,1) NOT NULL,
+	[shop_id] [int] NOT NULL,
+	[month_id] [int] NOT NULL,
+	[rent] [decimal](18, 2) NOT NULL,
+	[date] [varchar](50) NOT NULL,
+	[year] [varchar](5) NOT NULL,
+	[agreement_type_id] [int] NOT NULL,
+	[electricity_bill] [decimal](18, 2) NULL,
+	[maintenance] [decimal](18, 2) NULL,
+ CONSTRAINT [PK_rent] PRIMARY KEY CLUSTERED 
+(
+	[rent_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  View [dbo].[vw_income]    Script Date: 2/6/2024 3:53:25 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+Create View [dbo].[vw_income] as 
+SELECT        month_id, SUM(rent) AS totalRent, SUM(electricity_bill) AS totalElctricityBill, SUM(maintenance) AS totalMaintenance, SUM(rent + electricity_bill + maintenance) AS totalAmount
+FROM            dbo.rent
+GROUP BY month_id
+GO
+/****** Object:  Table [dbo].[month]    Script Date: 2/6/2024 3:53:25 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[month](
+	[month_id] [int] IDENTITY(1,1) NOT NULL,
+	[month_name] [varchar](50) NULL,
+ CONSTRAINT [PK_month] PRIMARY KEY CLUSTERED 
+(
+	[month_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[shop]    Script Date: 2/6/2024 3:53:25 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[shop](
+	[shop_id] [int] IDENTITY(1,1) NOT NULL,
+	[shop_name] [varchar](100) NOT NULL,
+	[shop_size] [varchar](100) NOT NULL,
+	[shop_location] [varchar](100) NOT NULL,
+	[shop_type_id] [int] NOT NULL,
+	[agreement_start_date] [varchar](50) NULL,
+ CONSTRAINT [PK_shop] PRIMARY KEY CLUSTERED 
+(
+	[shop_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  View [dbo].[vw_rented_shops]    Script Date: 2/6/2024 3:53:25 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+Create View [dbo].[vw_rented_shops] as 
+SELECT        s.shop_id, s.shop_name, m.month_name, m.month_id, r.rent, r.electricity_bill, r.maintenance, r.date
+FROM            dbo.shop AS s INNER JOIN
+                         dbo.rent AS r ON s.shop_id = r.shop_id INNER JOIN
+                         dbo.month AS m ON r.month_id = m.month_id
+GO
+/****** Object:  View [dbo].[vw_unrented_shops]    Script Date: 2/6/2024 3:53:25 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+Create View [dbo].[vw_unrented_shops] as
+SELECT        s.shop_id, s.shop_name, m.month_id, m.month_name
+FROM            dbo.shop AS s CROSS JOIN
+                         dbo.month AS m
+WHERE        (NOT EXISTS
+                             (SELECT        1 AS Expr1
+                               FROM            dbo.rent AS r
+                               WHERE        (s.shop_id = shop_id) AND (m.month_id = month_id)))
+GO
+/****** Object:  Table [dbo].[Customer_Details]    Script Date: 2/6/2024 3:53:25 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Customer_Details](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Business] [varchar](50) NULL,
+	[Individual] [varchar](50) NULL,
+	[Code] [varchar](50) NULL,
+	[Shop_Name] [varchar](50) NULL,
+	[Shop_Number] [int] NULL,
+	[Contact_Person] [varchar](50) NULL,
+	[Bill_To] [varchar](50) NULL,
+	[Ship_To] [varchar](50) NULL,
+	[Email] [varchar](50) NULL,
+	[Phone] [varchar](50) NULL,
+	[Customer_Balance] [decimal](18, 2) NULL,
+	[Payment_Terms] [int] NULL,
+	[Bank_Details] [varchar](50) NULL,
+	[Facebook] [varchar](50) NULL,
+	[Instagram] [varchar](50) NULL,
+	[TikTok] [varchar](50) NULL,
+	[Linkedin] [varchar](50) NULL,
+	[Twitter] [varchar](50) NULL,
+	[Website] [varchar](50) NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Invoice]    Script Date: 2/6/2024 3:53:25 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Invoice](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Date] [varchar](50) NULL,
+	[Invoice#] [varchar](50) NULL,
+	[Customer_Name] [int] NULL,
+	[Status] [varchar](50) NULL,
+	[DueDate] [varchar](50) NULL,
+	[Amount] [decimal](18, 2) NULL,
+	[BalanceDue] [decimal](18, 2) NULL,
+	[Qty] [int] NULL,
+	[Unit_Price] [decimal](18, 2) NULL,
+	[Particulars] [varchar](50) NULL,
+ CONSTRAINT [PK_Invoice] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  View [dbo].[vw_cust_invoice]    Script Date: 2/6/2024 3:53:25 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE VIEW [dbo].[vw_cust_invoice]  
+AS  
+select cd.Id,cd.Bill_To,cd.Ship_To,cd.Contact_Person,cd.Email,cd.Phone,i.Date,i.Qty,i.Unit_Price,i.Particulars,i.Invoice# from Customer_Details cd
+left join Invoice i on cd.Id=i.Customer_Name 
+GO
+/****** Object:  View [dbo].[vw_cust_ledger]    Script Date: 2/6/2024 3:53:25 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE VIEW [dbo].[vw_cust_ledger]
+AS
+SELECT        cd.Id, i.BalanceDue, i.Qty, i.Unit_Price, i.Particulars, i.Invoice#, i.Date, cd.Bill_To, cd.Ship_To, cd.Contact_Person, cd.Email, cd.Phone
+FROM            dbo.Invoice AS i INNER JOIN
+                         dbo.Customer_Details AS cd ON i.Customer_Name = cd.Id
+GO
+/****** Object:  Table [dbo].[agreement_type]    Script Date: 2/6/2024 3:53:25 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[agreement_type](
+	[agreement_type_id] [int] IDENTITY(1,1) NOT NULL,
+	[agreement_name] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_agreement_type] PRIMARY KEY CLUSTERED 
+(
+	[agreement_type_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Payment_Mode]    Script Date: 2/6/2024 3:53:25 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Payment_Mode](
+	[Id] [int] NOT NULL,
+	[Payment_mode] [varchar](50) NULL,
+ CONSTRAINT [PK_Mode] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Payment_terms]    Script Date: 2/6/2024 3:53:25 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Payment_terms](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Payment_Terms] [varchar](50) NULL,
+ CONSTRAINT [PK_Payment_terms] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Payment_Type]    Script Date: 2/6/2024 3:53:25 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Payment_Type](
+	[Id] [int] NOT NULL,
+	[PAYMENT_TYPE] [varchar](50) NULL,
+ CONSTRAINT [PK_Type] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Received_Payments]    Script Date: 2/6/2024 3:53:25 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Received_Payments](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Date] [datetime] NULL,
+	[ReceiptNo] [varchar](50) NULL,
+	[PaymentNo] [varchar](50) NULL,
+	[Type] [int] NULL,
+	[Reference_Number] [int] NULL,
+	[Customer_Name] [int] NULL,
+	[InvoiceNo] [int] NULL,
+	[Mode] [int] NULL,
+	[Amount] [decimal](18, 2) NULL,
+	[Unused_Amount] [varbinary](50) NULL,
+ CONSTRAINT [PK_Received_Payments] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[shop_type]    Script Date: 2/6/2024 3:53:25 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[shop_type](
+	[shop_type_id] [int] IDENTITY(1,1) NOT NULL,
+	[shop_type] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_shop_type] PRIMARY KEY CLUSTERED 
+(
+	[shop_type_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[user]    Script Date: 2/6/2024 3:53:25 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[user](
+	[user_id] [int] IDENTITY(1,1) NOT NULL,
+	[name] [varchar](100) NOT NULL,
+	[user_type_id] [int] NOT NULL,
+	[password] [varchar](100) NOT NULL,
+	[email] [varchar](100) NULL,
+	[phone] [int] NULL,
+	[address] [int] NULL,
+	[gender] [varchar](10) NULL,
+	[is_active] [bit] NOT NULL,
+	[joining_date] [varchar](50) NULL,
+ CONSTRAINT [PK_user] PRIMARY KEY CLUSTERED 
+(
+	[user_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[user_type]    Script Date: 2/6/2024 3:53:25 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[user_type](
+	[user_type_id] [int] IDENTITY(1,1) NOT NULL,
+	[user_type] [varchar](50) NULL,
+ CONSTRAINT [PK_user_type] PRIMARY KEY CLUSTERED 
+(
+	[user_type_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Vendor_Details]    Script Date: 2/6/2024 3:53:25 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Vendor_Details](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Business] [varchar](50) NULL,
+	[Individual] [varchar](50) NULL,
+	[Salutation] [varchar](50) NULL,
+	[Code] [varchar](50) NULL,
+	[Vendor_Name] [varchar](50) NULL,
+	[Contact_Person] [varchar](50) NULL,
+	[Vendor_Address] [varchar](50) NULL,
+	[Email] [varchar](50) NULL,
+	[Phone] [varchar](50) NULL,
+	[Vendor_Balance] [decimal](18, 2) NULL,
+	[Payment_Terms] [varchar](50) NULL,
+	[Bank_Details] [varchar](50) NULL,
+	[Website] [varchar](50) NULL,
+ CONSTRAINT [PK_Vendor_Details] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET IDENTITY_INSERT [dbo].[agreement_type] ON 
+
+INSERT [dbo].[agreement_type] ([agreement_type_id], [agreement_name]) VALUES (1, N'rent')
+SET IDENTITY_INSERT [dbo].[agreement_type] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Customer_Details] ON 
+
+INSERT [dbo].[Customer_Details] ([Id], [Business], [Individual], [Code], [Shop_Name], [Shop_Number], [Contact_Person], [Bill_To], [Ship_To], [Email], [Phone], [Customer_Balance], [Payment_Terms], [Bank_Details], [Facebook], [Instagram], [TikTok], [Linkedin], [Twitter], [Website]) VALUES (2003, NULL, NULL, N'SAMI', N'Khaadi', 12, N'Samiuddin', N'Khaadi', N'Khaadi', N'samiuddin12318@gmail.com', N'3342087639', NULL, 3, N'sami', NULL, NULL, NULL, NULL, NULL, NULL)
+INSERT [dbo].[Customer_Details] ([Id], [Business], [Individual], [Code], [Shop_Name], [Shop_Number], [Contact_Person], [Bill_To], [Ship_To], [Email], [Phone], [Customer_Balance], [Payment_Terms], [Bank_Details], [Facebook], [Instagram], [TikTok], [Linkedin], [Twitter], [Website]) VALUES (2004, NULL, NULL, N'WJ123', N'J.', 1234, N'Waji', N'J.', N'J.', N'abc@gmail.com', N'12345789', NULL, 3, N'Abc bank', NULL, NULL, NULL, NULL, NULL, NULL)
+SET IDENTITY_INSERT [dbo].[Customer_Details] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Invoice] ON 
+
+INSERT [dbo].[Invoice] ([Id], [Date], [Invoice#], [Customer_Name], [Status], [DueDate], [Amount], [BalanceDue], [Qty], [Unit_Price], [Particulars]) VALUES (2027, N'2023-09-08T19:00:00.000Z', N'MM-0001', 2003, N'PARTIALLY PAID', N'10/24/2023', CAST(2000.00 AS Decimal(18, 2)), CAST(1900.00 AS Decimal(18, 2)), 1, CAST(2000.00 AS Decimal(18, 2)), N'Apple Fuji')
+INSERT [dbo].[Invoice] ([Id], [Date], [Invoice#], [Customer_Name], [Status], [DueDate], [Amount], [BalanceDue], [Qty], [Unit_Price], [Particulars]) VALUES (2028, N'2023-09-08T19:00:00.000Z', N'MM-0002', 2004, N'UN-PAID', N'10/24/2023', CAST(10000.00 AS Decimal(18, 2)), CAST(10000.00 AS Decimal(18, 2)), 2, CAST(5000.00 AS Decimal(18, 2)), N'Apple Fuji')
+INSERT [dbo].[Invoice] ([Id], [Date], [Invoice#], [Customer_Name], [Status], [DueDate], [Amount], [BalanceDue], [Qty], [Unit_Price], [Particulars]) VALUES (2029, N'2023-11-04T19:00:00.000Z', N'MM-0001', 2003, N'UN-PAID', N'12/20/2023', CAST(2000.00 AS Decimal(18, 2)), CAST(2000.00 AS Decimal(18, 2)), 2, CAST(1000.00 AS Decimal(18, 2)), N'Apple Fuji')
+INSERT [dbo].[Invoice] ([Id], [Date], [Invoice#], [Customer_Name], [Status], [DueDate], [Amount], [BalanceDue], [Qty], [Unit_Price], [Particulars]) VALUES (2030, N'2024-01-24T19:00:00.000Z', N'MM-0001', 2003, N'UN-PAID', N'03/10/2024', CAST(200.00 AS Decimal(18, 2)), CAST(200.00 AS Decimal(18, 2)), 1, CAST(200.00 AS Decimal(18, 2)), NULL)
+SET IDENTITY_INSERT [dbo].[Invoice] OFF
+GO
+SET IDENTITY_INSERT [dbo].[month] ON 
+
+INSERT [dbo].[month] ([month_id], [month_name]) VALUES (1, N'Jan')
+SET IDENTITY_INSERT [dbo].[month] OFF
+GO
+INSERT [dbo].[Payment_Mode] ([Id], [Payment_mode]) VALUES (1, N'CASH')
+INSERT [dbo].[Payment_Mode] ([Id], [Payment_mode]) VALUES (2, N'BANK')
+INSERT [dbo].[Payment_Mode] ([Id], [Payment_mode]) VALUES (3, N'EASY PAISA')
+INSERT [dbo].[Payment_Mode] ([Id], [Payment_mode]) VALUES (4, N'JAZZ CASH')
+INSERT [dbo].[Payment_Mode] ([Id], [Payment_mode]) VALUES (5, N'NAYA PAY')
+GO
+SET IDENTITY_INSERT [dbo].[Payment_terms] ON 
+
+INSERT [dbo].[Payment_terms] ([Id], [Payment_Terms]) VALUES (1, N'Net-15')
+INSERT [dbo].[Payment_terms] ([Id], [Payment_Terms]) VALUES (2, N'Net-30')
+INSERT [dbo].[Payment_terms] ([Id], [Payment_Terms]) VALUES (3, N'Net-45')
+INSERT [dbo].[Payment_terms] ([Id], [Payment_Terms]) VALUES (4, N'Net-60')
+INSERT [dbo].[Payment_terms] ([Id], [Payment_Terms]) VALUES (5, N'Net-90')
+INSERT [dbo].[Payment_terms] ([Id], [Payment_Terms]) VALUES (6, N'Due on Receipt')
+INSERT [dbo].[Payment_terms] ([Id], [Payment_Terms]) VALUES (7, N'Due End of the Month')
+SET IDENTITY_INSERT [dbo].[Payment_terms] OFF
+GO
+INSERT [dbo].[Payment_Type] ([Id], [PAYMENT_TYPE]) VALUES (1, N'RENT INCOME')
+INSERT [dbo].[Payment_Type] ([Id], [PAYMENT_TYPE]) VALUES (2, N'EXPENSES')
+GO
+SET IDENTITY_INSERT [dbo].[Received_Payments] ON 
+
+INSERT [dbo].[Received_Payments] ([Id], [Date], [ReceiptNo], [PaymentNo], [Type], [Reference_Number], [Customer_Name], [InvoiceNo], [Mode], [Amount], [Unused_Amount]) VALUES (1, CAST(N'2024-01-24T19:00:00.000' AS DateTime), N'PMT00000001', NULL, 1, NULL, 2003, 2027, NULL, CAST(100.00 AS Decimal(18, 2)), NULL)
+SET IDENTITY_INSERT [dbo].[Received_Payments] OFF
+GO
+SET IDENTITY_INSERT [dbo].[shop] ON 
+
+INSERT [dbo].[shop] ([shop_id], [shop_name], [shop_size], [shop_location], [shop_type_id], [agreement_start_date]) VALUES (1, N'tekno', N'12', N'1st floor', 0, N'2023-07-13')
+INSERT [dbo].[shop] ([shop_id], [shop_name], [shop_size], [shop_location], [shop_type_id], [agreement_start_date]) VALUES (2, N'j.', N'45', N'2nd floor', 0, NULL)
+INSERT [dbo].[shop] ([shop_id], [shop_name], [shop_size], [shop_location], [shop_type_id], [agreement_start_date]) VALUES (3, N'sda', N'j.', N'asd', 0, N'2023-07-08')
+INSERT [dbo].[shop] ([shop_id], [shop_name], [shop_size], [shop_location], [shop_type_id], [agreement_start_date]) VALUES (4, N'asd', N'asd', N'asd', 2, N'2023-07-14')
+SET IDENTITY_INSERT [dbo].[shop] OFF
+GO
+SET IDENTITY_INSERT [dbo].[shop_type] ON 
+
+INSERT [dbo].[shop_type] ([shop_type_id], [shop_type]) VALUES (1, N'Rent')
+INSERT [dbo].[shop_type] ([shop_type_id], [shop_type]) VALUES (2, N'Own')
+SET IDENTITY_INSERT [dbo].[shop_type] OFF
+GO
+SET IDENTITY_INSERT [dbo].[user] ON 
+
+INSERT [dbo].[user] ([user_id], [name], [user_type_id], [password], [email], [phone], [address], [gender], [is_active], [joining_date]) VALUES (3, N'sami', 1, N'1', N'samiuddin12318@gmail.com', NULL, NULL, N'Male', 0, NULL)
+SET IDENTITY_INSERT [dbo].[user] OFF
+GO
+SET IDENTITY_INSERT [dbo].[user_type] ON 
+
+INSERT [dbo].[user_type] ([user_type_id], [user_type]) VALUES (1, N'admin')
+INSERT [dbo].[user_type] ([user_type_id], [user_type]) VALUES (2, N'finance')
+INSERT [dbo].[user_type] ([user_type_id], [user_type]) VALUES (3, N'Accounts')
+INSERT [dbo].[user_type] ([user_type_id], [user_type]) VALUES (4, N'Receptionist')
+SET IDENTITY_INSERT [dbo].[user_type] OFF
+GO
+/****** Object:  Index [PK_Customer_Details]    Script Date: 2/6/2024 3:53:25 PM ******/
+ALTER TABLE [dbo].[Customer_Details] ADD  CONSTRAINT [PK_Customer_Details] PRIMARY KEY NONCLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Customer_Details]  WITH CHECK ADD  CONSTRAINT [FK_Customer_Details_Payment_terms] FOREIGN KEY([Payment_Terms])
+REFERENCES [dbo].[Payment_terms] ([Id])
+GO
+ALTER TABLE [dbo].[Customer_Details] CHECK CONSTRAINT [FK_Customer_Details_Payment_terms]
+GO
+ALTER TABLE [dbo].[Invoice]  WITH CHECK ADD  CONSTRAINT [FK_Invoice_Customer] FOREIGN KEY([Customer_Name])
+REFERENCES [dbo].[Customer_Details] ([Id])
+GO
+ALTER TABLE [dbo].[Invoice] CHECK CONSTRAINT [FK_Invoice_Customer]
+GO
+ALTER TABLE [dbo].[Received_Payments]  WITH CHECK ADD  CONSTRAINT [FK_Received_Payments_CustomerName] FOREIGN KEY([Customer_Name])
+REFERENCES [dbo].[Customer_Details] ([Id])
+GO
+ALTER TABLE [dbo].[Received_Payments] CHECK CONSTRAINT [FK_Received_Payments_CustomerName]
+GO
+ALTER TABLE [dbo].[Received_Payments]  WITH CHECK ADD  CONSTRAINT [FK_Received_Payments_Invoice] FOREIGN KEY([InvoiceNo])
+REFERENCES [dbo].[Invoice] ([Id])
+GO
+ALTER TABLE [dbo].[Received_Payments] CHECK CONSTRAINT [FK_Received_Payments_Invoice]
+GO
+ALTER TABLE [dbo].[Received_Payments]  WITH CHECK ADD  CONSTRAINT [FK_Received_Payments_Mode] FOREIGN KEY([Mode])
+REFERENCES [dbo].[Payment_Mode] ([Id])
+GO
+ALTER TABLE [dbo].[Received_Payments] CHECK CONSTRAINT [FK_Received_Payments_Mode]
+GO
+ALTER TABLE [dbo].[Received_Payments]  WITH CHECK ADD  CONSTRAINT [FK_Received_Payments_Payment_Type] FOREIGN KEY([Type])
+REFERENCES [dbo].[Payment_Type] ([Id])
+GO
+ALTER TABLE [dbo].[Received_Payments] CHECK CONSTRAINT [FK_Received_Payments_Payment_Type]
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane1', @value=N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
+Begin DesignProperties = 
+   Begin PaneConfigurations = 
+      Begin PaneConfiguration = 0
+         NumPanes = 4
+         Configuration = "(H (1[40] 4[20] 2[20] 3) )"
+      End
+      Begin PaneConfiguration = 1
+         NumPanes = 3
+         Configuration = "(H (1 [50] 4 [25] 3))"
+      End
+      Begin PaneConfiguration = 2
+         NumPanes = 3
+         Configuration = "(H (1 [50] 2 [25] 3))"
+      End
+      Begin PaneConfiguration = 3
+         NumPanes = 3
+         Configuration = "(H (4 [30] 2 [40] 3))"
+      End
+      Begin PaneConfiguration = 4
+         NumPanes = 2
+         Configuration = "(H (1 [56] 3))"
+      End
+      Begin PaneConfiguration = 5
+         NumPanes = 2
+         Configuration = "(H (2 [66] 3))"
+      End
+      Begin PaneConfiguration = 6
+         NumPanes = 2
+         Configuration = "(H (4 [50] 3))"
+      End
+      Begin PaneConfiguration = 7
+         NumPanes = 1
+         Configuration = "(V (3))"
+      End
+      Begin PaneConfiguration = 8
+         NumPanes = 3
+         Configuration = "(H (1[56] 4[18] 2) )"
+      End
+      Begin PaneConfiguration = 9
+         NumPanes = 2
+         Configuration = "(H (1 [75] 4))"
+      End
+      Begin PaneConfiguration = 10
+         NumPanes = 2
+         Configuration = "(H (1[66] 2) )"
+      End
+      Begin PaneConfiguration = 11
+         NumPanes = 2
+         Configuration = "(H (4 [60] 2))"
+      End
+      Begin PaneConfiguration = 12
+         NumPanes = 1
+         Configuration = "(H (1) )"
+      End
+      Begin PaneConfiguration = 13
+         NumPanes = 1
+         Configuration = "(V (4))"
+      End
+      Begin PaneConfiguration = 14
+         NumPanes = 1
+         Configuration = "(V (2))"
+      End
+      ActivePaneConfig = 0
+   End
+   Begin DiagramPane = 
+      Begin Origin = 
+         Top = 0
+         Left = 0
+      End
+      Begin Tables = 
+         Begin Table = "Invoice"
+            Begin Extent = 
+               Top = 6
+               Left = 38
+               Bottom = 136
+               Right = 216
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
+      End
+   End
+   Begin SQLPane = 
+   End
+   Begin DataPane = 
+      Begin ParameterDefaults = ""
+      End
+   End
+   Begin CriteriaPane = 
+      Begin ColumnWidths = 11
+         Column = 1440
+         Alias = 900
+         Table = 1170
+         Output = 720
+         Append = 1400
+         NewValue = 1170
+         SortType = 1350
+         SortOrder = 1410
+         GroupBy = 1350
+         Filter = 1350
+         Or = 1350
+         Or = 1350
+         Or = 1350
+      End
+   End
+End
+' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vw_cust_invoice'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPaneCount', @value=1 , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vw_cust_invoice'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane1', @value=N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
+Begin DesignProperties = 
+   Begin PaneConfigurations = 
+      Begin PaneConfiguration = 0
+         NumPanes = 4
+         Configuration = "(H (1[40] 4[20] 2[20] 3) )"
+      End
+      Begin PaneConfiguration = 1
+         NumPanes = 3
+         Configuration = "(H (1 [50] 4 [25] 3))"
+      End
+      Begin PaneConfiguration = 2
+         NumPanes = 3
+         Configuration = "(H (1 [50] 2 [25] 3))"
+      End
+      Begin PaneConfiguration = 3
+         NumPanes = 3
+         Configuration = "(H (4 [30] 2 [40] 3))"
+      End
+      Begin PaneConfiguration = 4
+         NumPanes = 2
+         Configuration = "(H (1 [56] 3))"
+      End
+      Begin PaneConfiguration = 5
+         NumPanes = 2
+         Configuration = "(H (2 [66] 3))"
+      End
+      Begin PaneConfiguration = 6
+         NumPanes = 2
+         Configuration = "(H (4 [50] 3))"
+      End
+      Begin PaneConfiguration = 7
+         NumPanes = 1
+         Configuration = "(V (3))"
+      End
+      Begin PaneConfiguration = 8
+         NumPanes = 3
+         Configuration = "(H (1[56] 4[18] 2) )"
+      End
+      Begin PaneConfiguration = 9
+         NumPanes = 2
+         Configuration = "(H (1 [75] 4))"
+      End
+      Begin PaneConfiguration = 10
+         NumPanes = 2
+         Configuration = "(H (1[66] 2) )"
+      End
+      Begin PaneConfiguration = 11
+         NumPanes = 2
+         Configuration = "(H (4 [60] 2))"
+      End
+      Begin PaneConfiguration = 12
+         NumPanes = 1
+         Configuration = "(H (1) )"
+      End
+      Begin PaneConfiguration = 13
+         NumPanes = 1
+         Configuration = "(V (4))"
+      End
+      Begin PaneConfiguration = 14
+         NumPanes = 1
+         Configuration = "(V (2))"
+      End
+      ActivePaneConfig = 0
+   End
+   Begin DiagramPane = 
+      Begin Origin = 
+         Top = 0
+         Left = 0
+      End
+      Begin Tables = 
+         Begin Table = "i"
+            Begin Extent = 
+               Top = 6
+               Left = 38
+               Bottom = 136
+               Right = 216
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
+         Begin Table = "cd"
+            Begin Extent = 
+               Top = 6
+               Left = 254
+               Bottom = 136
+               Right = 441
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
+      End
+   End
+   Begin SQLPane = 
+   End
+   Begin DataPane = 
+      Begin ParameterDefaults = ""
+      End
+   End
+   Begin CriteriaPane = 
+      Begin ColumnWidths = 11
+         Column = 1440
+         Alias = 900
+         Table = 1170
+         Output = 720
+         Append = 1400
+         NewValue = 1170
+         SortType = 1350
+         SortOrder = 1410
+         GroupBy = 1350
+         Filter = 1350
+         Or = 1350
+         Or = 1350
+         Or = 1350
+      End
+   End
+End
+' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vw_cust_ledger'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPaneCount', @value=1 , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vw_cust_ledger'
+GO
