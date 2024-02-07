@@ -15,7 +15,7 @@ namespace Backend.Controllers
 
     public class Customer : Controller
     {
-        BMSContext bMSContext = new BMSContext();
+        ERPContext bMSContext = new ERPContext();
 
         
 

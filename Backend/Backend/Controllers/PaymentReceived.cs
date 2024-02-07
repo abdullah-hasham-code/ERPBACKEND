@@ -17,7 +17,7 @@ namespace Backend.Controllers
     {
         private static int ReceiptNumber = 1;
         private const string ReceiptPrefix = "PMT";
-        BMSContext bMSContext = new BMSContext();
+        ERPContext bMSContext = new ERPContext();
 
         //[HttpGet]
         //[Route("/api/getAllReceivedPaymentsdetails")]

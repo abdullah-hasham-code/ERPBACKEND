@@ -14,7 +14,7 @@ namespace Backend.Controllers
     [EnableCors("AllowCors"), Route("[controller]")]
     public class RentController : Controller
     {
-        BMSContext bMSContext = new BMSContext();
+        ERPContext bMSContext = new ERPContext();
         [HttpGet]
         [Route("/api/getAllRents")]
         public IEnumerable<Rent> getAllRents()

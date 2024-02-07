@@ -4,9 +4,15 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Backend.Models
 {
-    public partial class BMSContext : DbContext
+    public partial class ERPContext : DbContext
     {
+        public virtual DbSet<AccCategory> AccCategory { get; set; }
+        public virtual DbSet<AccGroup> AccGroup { get; set; }
+        public virtual DbSet<AccGroupCategory> AccGroupCategory { get; set; }
+        public virtual DbSet<Account> Account { get; set; }
+        public virtual DbSet<AccType> AccType { get; set; }
         public virtual DbSet<AgreementType> AgreementType { get; set; }
+        public virtual DbSet<Brand> Brand { get; set; }
         public virtual DbSet<CustomerDetails> CustomerDetails { get; set; }
         public virtual DbSet<Invoice> Invoice { get; set; }
         public virtual DbSet<Month> Month { get; set; }
@@ -26,12 +32,163 @@ namespace Backend.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer(@"Server=AS-EFT-HASHAM\SQLEXPRESS;Database=BMS;User Id=Abdullah;Password=Avanza@01234;");
+                optionsBuilder.UseSqlServer(@"Server=AS-EFT-HASHAM\SQLEXPRESS;Database=ERP;Trusted_Connection=True;");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<AccCategory>(entity =>
+            {
+                entity.ToTable("ACC_CATEGORY");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.AccountTypeId).HasColumnName("ACCOUNT_TYPE_ID");
+
+                entity.Property(e => e.ManualCode)
+                    .HasColumnName("MANUAL_CODE")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("NAME")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Priority)
+                    .HasColumnName("PRIORITY")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<AccGroup>(entity =>
+            {
+                entity.ToTable("ACC_GROUP");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.AccountTypeId).HasColumnName("ACCOUNT_TYPE_ID");
+
+                entity.Property(e => e.GroupCategoryId).HasColumnName("GROUP_CATEGORY_ID");
+
+                entity.Property(e => e.ManualCode)
+                    .HasColumnName("MANUAL_CODE")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Priority)
+                    .HasColumnName("PRIORITY")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<AccGroupCategory>(entity =>
+            {
+                entity.ToTable("ACC_GROUP_CATEGORY");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("NAME")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Account>(entity =>
+            {
+                entity.ToTable("ACCOUNT");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.AccountCategoryId).HasColumnName("ACCOUNT_CATEGORY_ID");
+
+                entity.Property(e => e.AccountNumber)
+                    .IsRequired()
+                    .HasColumnName("ACCOUNT_NUMBER")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.AccountTypeId).HasColumnName("ACCOUNT_TYPE_ID");
+
+                entity.Property(e => e.BalanceLimit).HasColumnName("BALANCE_LIMIT");
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnName("CREATED_AT")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.CreatedBy)
+                    .HasColumnName("CREATED_BY")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DiscNo)
+                    .HasColumnName("DISC_NO")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.GroupId).HasColumnName("GROUP_ID");
+
+                entity.Property(e => e.KindCode)
+                    .HasColumnName("KIND_CODE")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ManualCode)
+                    .HasColumnName("MANUAL_CODE")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("NAME")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Priority)
+                    .HasColumnName("PRIORITY")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Remarks)
+                    .HasColumnName("REMARKS")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SubCdTypeId).HasColumnName("SUB_CD_TYPE_ID");
+
+                entity.Property(e => e.SubGroupId).HasColumnName("SUB_GROUP_ID");
+
+                entity.Property(e => e.TaxAmount).HasColumnName("TAX_AMOUNT");
+
+                entity.Property(e => e.TaxLimit).HasColumnName("TAX_LIMIT");
+
+                entity.Property(e => e.TypeId).HasColumnName("TYPE_ID");
+
+                entity.Property(e => e.UpdatedAt)
+                    .HasColumnName("UPDATED_AT")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnName("UPDATED_BY")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<AccType>(entity =>
+            {
+                entity.ToTable("ACC_TYPE");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Name)
+                    .HasColumnName("NAME")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<AgreementType>(entity =>
             {
                 entity.ToTable("agreement_type");
@@ -42,6 +199,19 @@ namespace Backend.Models
                     .IsRequired()
                     .HasColumnName("agreement_name")
                     .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Brand>(entity =>
+            {
+                entity.ToTable("BRAND");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("NAME")
+                    .HasMaxLength(200)
                     .IsUnicode(false);
             });
 

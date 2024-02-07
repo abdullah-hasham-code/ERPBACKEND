@@ -15,7 +15,7 @@ namespace Backend.Controllers
     [EnableCors("AllowCors"), Route("[controller]")]
     public class ReportController : Controller
     {
-        BMSContext bMSContext = new BMSContext();
+        ERPContext bMSContext = new ERPContext();
         private readonly IConfiguration _configuration;
         public ReportController(IConfiguration Configuration)
         {

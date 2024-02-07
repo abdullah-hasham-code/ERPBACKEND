@@ -16,7 +16,7 @@ namespace Backend.Controllers
     public class ShopController : Controller
     {
 
-        BMSContext bMSContext = new BMSContext();
+        ERPContext bMSContext = new ERPContext();
         [HttpGet]
         [Route("/api/getAllShops")]
         public IEnumerable<Shop> getAllShops()

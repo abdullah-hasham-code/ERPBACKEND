@@ -15,7 +15,7 @@ namespace Backend.Controllers
     [EnableCors("AllowCors"), Route("[controller]")]
     public class UserController : Controller
     {
-        BMSContext bMSContext = new BMSContext();
+        ERPContext bMSContext = new ERPContext();
         [HttpGet]
         [Route("/api/getAllUser")]
         public IEnumerable<User> getAllUser()

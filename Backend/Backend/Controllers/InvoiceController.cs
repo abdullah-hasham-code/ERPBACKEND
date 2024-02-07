@@ -27,7 +27,7 @@ namespace Backend.Controllers
             _configuration = Configuration;
         }
 
-        BMSContext bMSContext = new BMSContext();
+        ERPContext bMSContext = new ERPContext();
 
         //[HttpGet]
         //[Route("/api/getAllInvoicedetails")]
