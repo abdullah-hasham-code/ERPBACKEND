@@ -10,6 +10,8 @@ using Newtonsoft.Json;
 
 namespace Backend.Controllers
 {
+    [ApiController]
+    [EnableCors("AllowCors"), Route("[controller]")]
     public class AccountController : Controller
     {
         ERPContext bMSContext = new ERPContext();
@@ -331,7 +333,7 @@ namespace Backend.Controllers
             return bMSContext.Account.ToList();
         }
         [HttpPost]
-        [Route("/api/createAccountCategory")]
+        [Route("/api/createAccount")]
         public object createAccount(Account acc)
         {
 
@@ -367,13 +369,13 @@ namespace Backend.Controllers
                     }
                     else
                     {
-                        Account account = new Account();
-                        account.Id = acc.Id;
+                        Account account = new Account(); 
                         account.AccountCategoryId = acc.AccountCategoryId;
                         account.AccountNumber = acc.AccountNumber;
                         account.AccountTypeId = acc.AccountTypeId;
                         account.SubCdTypeId = acc.SubCdTypeId;
                         account.SubGroupId = acc.SubGroupId;
+                        account.GroupId = acc.GroupId;
                         account.BalanceLimit = acc.BalanceLimit;
                         account.DiscNo = acc.DiscNo;
                         account.TaxLimit = acc.TaxLimit;
