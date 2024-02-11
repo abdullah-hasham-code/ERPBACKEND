@@ -38,6 +38,8 @@ namespace Backend.Controllers
                         accCatChk.Id = accCategory.Id; 
                         accCatChk.AccountTypeId = accCategory.AccountTypeId; 
                         accCatChk.Name = accCategory.Name;
+                        accCatChk.ManualCode = accCategory.ManualCode;
+                        accCatChk.Priority = accCategory.Priority;
                         bMSContext.AccCategory.Update(accCatChk);
                         bMSContext.SaveChanges();
                         return JsonConvert.SerializeObject(new { id = accCatChk.Id });
@@ -48,6 +50,8 @@ namespace Backend.Controllers
                         accCat.Id = accCategory.Id;
                         accCat.AccountTypeId = accCategory.AccountTypeId;
                         accCat.Name = accCategory.Name;
+                        accCat.ManualCode = accCategory.ManualCode;
+                        accCat.Priority = accCategory.Priority;
                         bMSContext.AccCategory.Add(accCat);
                         bMSContext.SaveChanges();
                         return JsonConvert.SerializeObject(new { id = accCat.Id });
@@ -351,6 +355,7 @@ namespace Backend.Controllers
                         accChk.AccountTypeId = acc.AccountTypeId;
                         accChk.SubCdTypeId = acc.SubCdTypeId;
                         accChk.SubGroupId = acc.SubGroupId;
+                        accChk.GroupId = acc.GroupId;
                         accChk.BalanceLimit = acc.BalanceLimit;
                         accChk.DiscNo = acc.DiscNo;
                         accChk.TaxLimit = acc.TaxLimit;
