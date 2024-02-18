@@ -13,7 +13,7 @@ namespace Backend.Controllers
     [ApiController]
     [EnableCors("AllowCors"), Route("[controller]")]
 
-    public class Customer : Controller
+    public class CustomerController : Controller
     {
         ERPContext bMSContext = new ERPContext();
 

@@ -2,8 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Linq;
+using System.Threading.Tasks; 
 using Backend.Models;
 using Microsoft.AspNetCore.Cors;
 using Newtonsoft.Json;
@@ -14,8 +13,7 @@ namespace Backend.Controllers
     [EnableCors("AllowCors"), Route("[controller]")]
     public class AccountController : Controller
     {
-        ERPContext bMSContext = new ERPContext();
-
+        ERPContext bMSContext = new ERPContext(); 
         [HttpGet]
         [Route("/api/getAllAccountCategory")]
         public IEnumerable<AccCategory> getAllAccountCategory()

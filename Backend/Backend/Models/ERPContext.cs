@@ -12,17 +12,23 @@ namespace Backend.Models
         public virtual DbSet<Account> Account { get; set; }
         public virtual DbSet<AccType> AccType { get; set; }
         public virtual DbSet<AgreementType> AgreementType { get; set; }
+        public virtual DbSet<Area> Area { get; set; }
         public virtual DbSet<Brand> Brand { get; set; }
+        public virtual DbSet<City> City { get; set; }
         public virtual DbSet<CustomerDetails> CustomerDetails { get; set; }
         public virtual DbSet<Invoice> Invoice { get; set; }
         public virtual DbSet<Month> Month { get; set; }
+        public virtual DbSet<Party> Party { get; set; }
         public virtual DbSet<PaymentMode> PaymentMode { get; set; }
         public virtual DbSet<PaymentTerms> PaymentTerms { get; set; }
         public virtual DbSet<PaymentType> PaymentType { get; set; }
         public virtual DbSet<ReceivedPayments> ReceivedPayments { get; set; }
         public virtual DbSet<Rent> Rent { get; set; }
+        public virtual DbSet<SalesMan> SalesMan { get; set; }
+        public virtual DbSet<SalesManType> SalesManType { get; set; }
         public virtual DbSet<Shop> Shop { get; set; }
         public virtual DbSet<ShopType> ShopType { get; set; }
+        public virtual DbSet<SubArea> SubArea { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<UserType> UserType { get; set; }
         public virtual DbSet<VendorDetails> VendorDetails { get; set; }
@@ -202,6 +208,18 @@ namespace Backend.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<Area>(entity =>
+            {
+                entity.ToTable("AREA");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Name)
+                    .HasColumnName("NAME")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<Brand>(entity =>
             {
                 entity.ToTable("BRAND");
@@ -212,6 +230,19 @@ namespace Backend.Models
                     .IsRequired()
                     .HasColumnName("NAME")
                     .HasMaxLength(200)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<City>(entity =>
+            {
+                entity.ToTable("CITY");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("NAME")
+                    .HasMaxLength(100)
                     .IsUnicode(false);
             });
 
@@ -345,6 +376,78 @@ namespace Backend.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<Party>(entity =>
+            {
+                entity.ToTable("PARTY");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Address)
+                    .HasColumnName("ADDRESS")
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Address1)
+                    .HasColumnName("ADDRESS_1")
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.AreaId).HasColumnName("AREA_ID");
+
+                entity.Property(e => e.CategoryId).HasColumnName("CATEGORY_ID");
+
+                entity.Property(e => e.CityId).HasColumnName("CITY_ID");
+
+                entity.Property(e => e.ContactPerson)
+                    .HasColumnName("CONTACT_PERSON")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DueDays).HasColumnName("DUE_DAYS");
+
+                entity.Property(e => e.Email)
+                    .HasColumnName("EMAIL")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FaxNo)
+                    .HasColumnName("FAX_NO")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.MobileNo)
+                    .HasColumnName("MOBILE_NO")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Nic)
+                    .HasColumnName("NIC")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Ntn)
+                    .HasColumnName("NTN")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PartyName)
+                    .HasColumnName("PARTY_NAME")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SubAreaId).HasColumnName("SUB_AREA_ID");
+
+                entity.Property(e => e.TaxRegNo)
+                    .HasColumnName("TAX_REG_NO")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TelPhoneNo)
+                    .HasColumnName("TEL_PHONE_NO")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<PaymentMode>(entity =>
             {
                 entity.ToTable("Payment_Mode");
@@ -453,6 +556,37 @@ namespace Backend.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<SalesMan>(entity =>
+            {
+                entity.ToTable("SALES_MAN");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.IsActive)
+                    .HasColumnName("IS_ACTIVE")
+                    .HasColumnType("nchar(10)");
+
+                entity.Property(e => e.Name)
+                    .HasColumnName("NAME")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SalesManTypeId).HasColumnName("SALES_MAN_TYPE_ID");
+            });
+
+            modelBuilder.Entity<SalesManType>(entity =>
+            {
+                entity.ToTable("SALES_MAN_TYPE");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("NAME")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<Shop>(entity =>
             {
                 entity.ToTable("shop");
@@ -495,6 +629,18 @@ namespace Backend.Models
                     .IsRequired()
                     .HasColumnName("shop_type")
                     .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<SubArea>(entity =>
+            {
+                entity.ToTable("SUB_AREA");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Name)
+                    .HasColumnName("NAME")
+                    .HasMaxLength(100)
                     .IsUnicode(false);
             });
 

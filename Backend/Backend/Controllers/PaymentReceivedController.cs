@@ -13,7 +13,7 @@ namespace Backend.Controllers
 {
     [ApiController]
     [EnableCors("AllowCors"), Route("[controller]")]
-    public class PaymentReceived : Controller
+    public class PaymentReceivedController : Controller
     {
         private static int ReceiptNumber = 1;
         private const string ReceiptPrefix = "PMT";
