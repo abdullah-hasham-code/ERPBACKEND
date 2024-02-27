@@ -19,6 +19,9 @@ namespace Backend.Models
         public virtual DbSet<Invoice> Invoice { get; set; }
         public virtual DbSet<Month> Month { get; set; }
         public virtual DbSet<Party> Party { get; set; }
+        public virtual DbSet<PartyOtherContactDetail> PartyOtherContactDetail { get; set; }
+        public virtual DbSet<PartyPriceDetail> PartyPriceDetail { get; set; }
+        public virtual DbSet<PartyProductDetail> PartyProductDetail { get; set; }
         public virtual DbSet<PaymentMode> PaymentMode { get; set; }
         public virtual DbSet<PaymentTerms> PaymentTerms { get; set; }
         public virtual DbSet<PaymentType> PaymentType { get; set; }
@@ -446,6 +449,117 @@ namespace Backend.Models
                     .HasColumnName("TEL_PHONE_NO")
                     .HasMaxLength(50)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<PartyOtherContactDetail>(entity =>
+            {
+                entity.ToTable("PARTY_OTHER_CONTACT_DETAIL");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.CellNo)
+                    .HasColumnName("CELL_NO")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ContactPerson)
+                    .HasColumnName("CONTACT_PERSON")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Email)
+                    .HasColumnName("EMAIL")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.OfficeAddress)
+                    .HasColumnName("OFFICE_ADDRESS")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PartyId).HasColumnName("PARTY_ID");
+
+                entity.Property(e => e.Remarks)
+                    .HasColumnName("REMARKS")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ResAddress)
+                    .HasColumnName("RES_ADDRESS")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<PartyPriceDetail>(entity =>
+            {
+                entity.ToTable("PARTY_PRICE_DETAIL");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.BarCode)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Discount).HasColumnName("DISCOUNT");
+
+                entity.Property(e => e.Discount2).HasColumnName("DISCOUNT2");
+
+                entity.Property(e => e.Gst).HasColumnName("GST");
+
+                entity.Property(e => e.Gstper2).HasColumnName("GSTPer2");
+
+                entity.Property(e => e.ItemName)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PartyId).HasColumnName("PARTY_ID");
+
+                entity.Property(e => e.Remarks)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<PartyProductDetail>(entity =>
+            {
+                entity.ToTable("PARTY_PRODUCT_DETAIL");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.BarCode)
+                    .HasColumnName("BAR_CODE")
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Discount).HasColumnName("DISCOUNT");
+
+                entity.Property(e => e.Discper2).HasColumnName("DISCPER2");
+
+                entity.Property(e => e.FlatDiscOnEachQty).HasColumnName("FLAT_DISC_ON_EACH_QTY");
+
+                entity.Property(e => e.Gst)
+                    .HasColumnName("GST")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Gstper2).HasColumnName("GSTPER2");
+
+                entity.Property(e => e.ItemName)
+                    .HasColumnName("ITEM_NAME")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PartyId).HasColumnName("PARTY_ID");
+
+                entity.Property(e => e.Qty).HasColumnName("QTY");
+
+                entity.Property(e => e.Remarks)
+                    .HasColumnName("REMARKS")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SalePrice).HasColumnName("SALE_PRICE");
             });
 
             modelBuilder.Entity<PaymentMode>(entity =>

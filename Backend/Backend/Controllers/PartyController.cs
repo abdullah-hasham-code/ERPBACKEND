@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Backend.Models;
+using Backend.Model;
 using Microsoft.AspNetCore.Cors;
 using Newtonsoft.Json;
 
@@ -37,6 +38,12 @@ namespace Backend.Controllers
         public IEnumerable<Party> getAllParty()
         {
             return bMSContext.Party.ToList();
+        }
+        [HttpGet]
+        [Route("/api/getAllPartyPrice")]
+        public IEnumerable<PartyPriceDetail> getAllPartyPrice()
+        {
+            return bMSContext.PartyPriceDetail.ToList();
         }
         [HttpPost]
         [Route("/api/createParty")]
@@ -100,6 +107,65 @@ namespace Backend.Controllers
                     JsonConvert.SerializeObject(new { msg = ex.Message });
                 }
                 return JsonConvert.SerializeObject(new { msg = "Message" });
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        [HttpPost]
+        [Route("/api/createPartyPrice")]
+        public object createPartyPrice(PartyPriceDto parPrice)
+        {
+
+            try
+            {
+                var partyCheck = bMSContext.PartyProductDetail.SingleOrDefault(u => u.Id == parPrice.partyId);
+                if (partyCheck != null)
+                {
+                    bMSContext.PartyProductDetail.Remove(partyCheck);
+                    bMSContext.SaveChanges();
+                    foreach (var item in parPrice.partyPriceData)
+                    {
+                        PartyPriceDetail partyPrice = new PartyPriceDetail();
+                        partyPrice.PartyId = parPrice.partyId;
+                        partyPrice.Remarks = item.Remakrs;
+                        partyPrice.ItemName = item.ItemName;
+                        partyPrice.BonusQty = item.BonusQty;
+                        partyPrice.SalePrice = item.SalePrice;
+                        partyPrice.FlatDesconeachQty = item.FlatDesconeachQty;
+                        partyPrice.BarCode = item.BarCode;
+                        partyPrice.Gstper2 = item.GSTPer2;
+                        partyPrice.Gst = item.GST;
+                        partyPrice.Discount = item.Discount;
+                        partyPrice.Discount2 = item.Discount2;
+                        bMSContext.PartyPriceDetail.Add(partyPrice);
+                        bMSContext.SaveChanges();
+                    }
+
+                }
+                else
+                {
+                    foreach (var item in parPrice.partyPriceData)
+                    {
+                        PartyPriceDetail partyPrice = new PartyPriceDetail();
+                        partyPrice.PartyId = parPrice.partyId;
+                        partyPrice.ItemName = item.ItemName;
+                        partyPrice.Remarks = item.Remakrs;
+                        partyPrice.BonusQty = item.BonusQty;
+                        partyPrice.SalePrice = item.SalePrice;
+                        partyPrice.FlatDesconeachQty = item.FlatDesconeachQty;
+                        partyPrice.BarCode = item.BarCode;
+                        partyPrice.Gstper2 = item.GSTPer2;
+                        partyPrice.Gst = item.GST;
+                        partyPrice.Discount = item.Discount;
+                        partyPrice.Discount2 = item.Discount2;
+                        bMSContext.PartyPriceDetail.Add(partyPrice);
+                        bMSContext.SaveChanges();
+                    }
+                }
+                return null;
             }
             catch (Exception ex)
             {
