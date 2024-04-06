@@ -16,6 +16,7 @@ namespace Backend.Models
         public virtual DbSet<Brand> Brand { get; set; }
         public virtual DbSet<City> City { get; set; }
         public virtual DbSet<CustomerDetails> CustomerDetails { get; set; }
+        public virtual DbSet<GoDown> GoDown { get; set; }
         public virtual DbSet<Invoice> Invoice { get; set; }
         public virtual DbSet<Month> Month { get; set; }
         public virtual DbSet<Party> Party { get; set; }
@@ -25,6 +26,9 @@ namespace Backend.Models
         public virtual DbSet<PaymentMode> PaymentMode { get; set; }
         public virtual DbSet<PaymentTerms> PaymentTerms { get; set; }
         public virtual DbSet<PaymentType> PaymentType { get; set; }
+        public virtual DbSet<PurchaseOpeningPurchase> PurchaseOpeningPurchase { get; set; }
+        public virtual DbSet<PurchaseOrderCateory> PurchaseOrderCateory { get; set; }
+        public virtual DbSet<PurchasePurchase> PurchasePurchase { get; set; }
         public virtual DbSet<ReceivedPayments> ReceivedPayments { get; set; }
         public virtual DbSet<Rent> Rent { get; set; }
         public virtual DbSet<SalesMan> SalesMan { get; set; }
@@ -334,6 +338,19 @@ namespace Backend.Models
                     .HasConstraintName("FK_Customer_Details_Payment_terms");
             });
 
+            modelBuilder.Entity<GoDown>(entity =>
+            {
+                entity.ToTable("GO_DOWN");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("NAME")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<Invoice>(entity =>
             {
                 entity.Property(e => e.CustomerName).HasColumnName("Customer_Name");
@@ -594,6 +611,322 @@ namespace Backend.Models
                     .HasColumnName("PAYMENT_TYPE")
                     .HasMaxLength(50)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<PurchaseOpeningPurchase>(entity =>
+            {
+                entity.ToTable("PURCHASE_OPENING_PURCHASE");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.AccName)
+                    .HasColumnName("ACC_NAME")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.AvgPrice)
+                    .HasColumnName("AVG_PRICE")
+                    .HasColumnType("decimal(18, 4)");
+
+                entity.Property(e => e.Barcode)
+                    .HasColumnName("BARCODE")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Bonus)
+                    .HasColumnName("BONUS")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.BonusQty)
+                    .HasColumnName("BONUS_QTY")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Date)
+                    .HasColumnName("DATE")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Disc)
+                    .HasColumnName("DISC")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DiscFlatEn)
+                    .HasColumnName("DISC_FLAT_EN")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DiscFlatValue)
+                    .HasColumnName("DISC_FLAT_VALUE")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DiscPerValue)
+                    .HasColumnName("DISC_PER_VALUE")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DiscValue2)
+                    .HasColumnName("DISC_VALUE2")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Flatdisc)
+                    .HasColumnName("FLATDISC")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Godown)
+                    .HasColumnName("GODOWN")
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.GrantTotal)
+                    .HasColumnName("GRANT_TOTAL")
+                    .HasColumnType("decimal(18, 4)");
+
+                entity.Property(e => e.Gst)
+                    .HasColumnName("GST")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.GstValue2)
+                    .HasColumnName("GST_VALUE2")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Gstmode)
+                    .HasColumnName("GSTMODE")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Gstval)
+                    .HasColumnName("GSTVAL")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Itemname)
+                    .HasColumnName("ITEMNAME")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LooseQty)
+                    .HasColumnName("LOOSE_QTY")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Margin)
+                    .HasColumnName("MARGIN")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Markup)
+                    .HasColumnName("MARKUP")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Misc)
+                    .HasColumnName("MISC")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Netrate)
+                    .HasColumnName("NETRATE")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Purprice)
+                    .HasColumnName("PURPRICE")
+                    .HasColumnType("decimal(18, 4)");
+
+                entity.Property(e => e.Qty).HasColumnName("QTY");
+
+                entity.Property(e => e.QtyPack)
+                    .HasColumnName("QTY_PACK")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.RecentPurPrice)
+                    .HasColumnName("RECENT_PUR_PRICE")
+                    .HasColumnType("decimal(18, 4)");
+
+                entity.Property(e => e.Remarks)
+                    .HasColumnName("REMARKS")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Saleprice)
+                    .HasColumnName("SALEPRICE")
+                    .HasColumnType("decimal(18, 4)");
+
+                entity.Property(e => e.Stock)
+                    .HasColumnName("STOCK")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TotalAmount)
+                    .HasColumnName("TOTAL_AMOUNT")
+                    .HasColumnType("decimal(18, 4)");
+
+                entity.Property(e => e.TotalIncTax)
+                    .HasColumnName("TOTAL_INC_TAX")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TotalQty)
+                    .HasColumnName("TOTAL_QTY")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TotalStock)
+                    .HasColumnName("TOTAL_STOCK")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Totalexctax)
+                    .HasColumnName("TOTALEXCTAX")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Vehicleno)
+                    .HasColumnName("VEHICLENO")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.WithholdingTaxPerc)
+                    .HasColumnName("WITHHOLDING_TAX_PERC")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<PurchaseOrderCateory>(entity =>
+            {
+                entity.ToTable("PURCHASE_ORDER_CATEORY");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("NAME")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<PurchasePurchase>(entity =>
+            {
+                entity.ToTable("PURCHASE_PURCHASE");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Approved).HasColumnName("APPROVED");
+
+                entity.Property(e => e.AvgPrice).HasColumnName("AVG_PRICE");
+
+                entity.Property(e => e.Barcode)
+                    .HasColumnName("BARCODE")
+                    .IsUnicode(false);
+
+                entity.Property(e => e.BonusQty).HasColumnName("BONUS_QTY");
+
+                entity.Property(e => e.BonusQuantity).HasColumnName("BONUS_QUANTITY");
+
+                entity.Property(e => e.BonusValue).HasColumnName("BONUS_VALUE");
+
+                entity.Property(e => e.DescPercValue).HasColumnName("DESC_PERC_VALUE");
+
+                entity.Property(e => e.DiscFlatEn).HasColumnName("DISC_FLAT_EN");
+
+                entity.Property(e => e.DiscFlatValue).HasColumnName("DISC_FLAT_VALUE");
+
+                entity.Property(e => e.DiscFlatValue2).HasColumnName("DISC_FLAT_VALUE2");
+
+                entity.Property(e => e.Discbypercent)
+                    .HasColumnName("DISCBYPERCENT")
+                    .HasColumnType("decimal(18, 4)");
+
+                entity.Property(e => e.Discbyvalue)
+                    .HasColumnName("DISCBYVALUE")
+                    .HasColumnType("decimal(18, 4)");
+
+                entity.Property(e => e.Expiry)
+                    .HasColumnName("EXPIRY")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.GrandTotal).HasColumnName("GRAND_TOTAL");
+
+                entity.Property(e => e.GstValue).HasColumnName("GST_VALUE");
+
+                entity.Property(e => e.GstValue2).HasColumnName("GST_VALUE2");
+
+                entity.Property(e => e.Gstbypercent).HasColumnName("GSTBYPERCENT");
+
+                entity.Property(e => e.Gstbyvalue).HasColumnName("GSTBYVALUE");
+
+                entity.Property(e => e.ItemName)
+                    .HasColumnName("ITEM_NAME")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LooseQty).HasColumnName("LOOSE_QTY");
+
+                entity.Property(e => e.Marginbypercent).HasColumnName("MARGINBYPERCENT");
+
+                entity.Property(e => e.MiscEn).HasColumnName("MISC_EN");
+
+                entity.Property(e => e.NetRate)
+                    .HasColumnName("NET_RATE")
+                    .HasColumnType("decimal(18, 5)");
+
+                entity.Property(e => e.PartyInv)
+                    .HasColumnName("PARTY_INV")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PartyName)
+                    .HasColumnName("PARTY_NAME")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PurchasePrice)
+                    .HasColumnName("PURCHASE_PRICE")
+                    .HasColumnType("decimal(18, 4)");
+
+                entity.Property(e => e.QtyPack).HasColumnName("QTY_PACK");
+
+                entity.Property(e => e.Quantity).HasColumnName("QUANTITY");
+
+                entity.Property(e => e.RecentPurchasePrice).HasColumnName("RECENT_PURCHASE_PRICE");
+
+                entity.Property(e => e.Remarks)
+                    .HasColumnName("REMARKS")
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.RetailPrice).HasColumnName("RETAIL_PRICE");
+
+                entity.Property(e => e.SaleDisc)
+                    .HasColumnName("SALE_DISC")
+                    .HasColumnType("decimal(18, 4)");
+
+                entity.Property(e => e.SalePrice)
+                    .HasColumnName("SALE_PRICE")
+                    .HasColumnType("decimal(18, 4)");
+
+                entity.Property(e => e.TotalExcTax)
+                    .HasColumnName("TOTAL_EXC_TAX")
+                    .HasColumnType("decimal(18, 4)");
+
+                entity.Property(e => e.TotalExecTax).HasColumnName("TOTAL_EXEC_TAX");
+
+                entity.Property(e => e.TotalIncTax).HasColumnName("TOTAL_INC_TAX");
+
+                entity.Property(e => e.TotalIncludeTax)
+                    .HasColumnName("TOTAL_INCLUDE_TAX")
+                    .HasColumnType("decimal(18, 4)");
+
+                entity.Property(e => e.TotalQty).HasColumnName("TOTAL_QTY");
+
+                entity.Property(e => e.TotalStock).HasColumnName("TOTAL_STOCK");
             });
 
             modelBuilder.Entity<ReceivedPayments>(entity =>
